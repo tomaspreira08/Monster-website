@@ -158,7 +158,7 @@ export default function Quiz({ onComplete, onBack }) {
         </div>
 
         <div className="text-center text-[11px] text-zinc-500">
-          Clica num sabor para avançar para a personalização
+          Clica num sabor para avançar para a personalização.
         </div>
       </div>
     );
