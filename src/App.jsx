@@ -2,14 +2,35 @@ import { useState } from 'react';
 import Hub from './components/Hub';
 import Quiz from './components/Quiz';
 import Customizer from './components/Customizer';
+import SavedCans from './components/SavedCans';
 
 export default function App() {
   const [currentView, setCurrentView] = useState('hub');
-  const [flavor, setFlavor] = useState({
-    name: 'Ultra Original',
-    color: '#00FF00',
-    description: 'O clássico de alta voltagem.'
+  const [flavor, setFlavor] = useState(null); // Começa vazio por defeito
+  const [editingIndex, setEditingIndex] = useState(null);
+  const [customData, setCustomData] = useState(null);
+
+  const [savedCans, setSavedCans] = useState(() => {
+    const local = localStorage.getItem('monster_saved_cans');
+    return local ? JSON.parse(local) : [];
   });
+
+  const handleSaveCan = (newCanData) => {
+    let newList;
+    if (editingIndex !== null) {
+      newList = [...savedCans];
+      newList[editingIndex] = newCanData;
+      alert('Alterações guardadas com sucesso! 🚀');
+    } else {
+      newList = [newCanData, ...savedCans];
+      alert('Lata guardada nas tuas personalizações! 🚀');
+    }
+
+    setSavedCans(newList);
+    localStorage.setItem('monster_saved_cans', JSON.stringify(newList));
+    setEditingIndex(null);
+    setCurrentView('saved');
+  };
 
   return (
     <div className="min-h-[100dvh] bg-zinc-950 text-white flex flex-col items-center justify-center font-sans select-none overflow-hidden">
@@ -17,18 +38,28 @@ export default function App() {
         
         {currentView === 'hub' && (
           <Hub 
-            onStartQuiz={() => setCurrentView('quiz')}
-            onDirectCustomizer={(defaultFlavor) => {
-              setFlavor(defaultFlavor);
+            onStartQuiz={() => {
+              setEditingIndex(null);
+              setCustomData(null);
+              setCurrentView('quiz');
+            }}
+            onDirectCustomizer={() => {
+              setEditingIndex(null);
+              setCustomData(null);
+              setFlavor(null); // Nenhum sabor selecionado
               setCurrentView('customizer');
             }}
+            onViewSaved={() => setCurrentView('saved')}
+            savedCount={savedCans.length}
           />
         )}
 
         {currentView === 'quiz' && (
           <Quiz 
             onComplete={(selectedFlavor) => {
-              setFlavor(selectedFlavor);
+              setEditingIndex(null);
+              setCustomData(null);
+              setFlavor(selectedFlavor); // Sabor vem pré-selecionado do Quiz
               setCurrentView('customizer');
             }}
             onBack={() => setCurrentView('hub')}
@@ -38,7 +69,29 @@ export default function App() {
         {currentView === 'customizer' && (
           <Customizer 
             flavor={flavor}
+            initialData={customData}
+            isEditing={editingIndex !== null}
             onBack={() => setCurrentView('hub')}
+            onSave={handleSaveCan}
+          />
+        )}
+
+        {currentView === 'saved' && (
+          <SavedCans 
+            cans={savedCans}
+            onBack={() => setCurrentView('hub')}
+            onEditCan={(item, index) => {
+              setEditingIndex(index);
+              setCustomData(item);
+              setFlavor(item.flavorName ? { name: item.flavorName, color: item.patternColor } : null);
+              setCurrentView('customizer');
+            }}
+            onNewCustomizer={() => {
+              setEditingIndex(null);
+              setCustomData(null);
+              setFlavor(null); // Nenhum sabor selecionado
+              setCurrentView('customizer');
+            }}
           />
         )}
 
