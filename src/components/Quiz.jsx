@@ -158,7 +158,7 @@ export default function Quiz({ onComplete, onBack }) {
         </div>
 
         <div className="text-center text-[11px] text-zinc-500">
-          Clica num sabor para avançar para a personalização.
+          Clica num sabor para avançar para a personalização
         </div>
       </div>
     );
@@ -206,7 +206,7 @@ export default function Quiz({ onComplete, onBack }) {
       <div className="w-full bg-zinc-800 h-1.5 rounded-full overflow-hidden">
         <div
           className="bg-green-500 h-full transition-all duration-300"
-          style={{ width: `${((currentStep + 1) / questions.length) * 100}%` }}
+          style={{ width: `${(currentStep / questions.length) * 100}%` }}
         ></div>
       </div>
     </div>
