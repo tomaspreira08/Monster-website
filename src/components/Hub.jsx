@@ -8,11 +8,13 @@ export default function Hub({ onStartQuiz, onDirectCustomizer, onViewSaved, save
         <motion.div 
           initial={{ scale: 0 }} 
           animate={{ scale: 1 }} 
-          className="inline-block bg-green-500/10 border border-green-500/30 p-3 rounded-2xl mb-3 text-green-400"
+          className="inline-flex items-center justify-center"
         >
-          <Zap size={32} />
+          <img 
+            src="/Logo_Monster_Energy.png"  
+            className="w-60 h-40 object-contain" 
+          />
         </motion.div>
-        <h1 className="text-3xl font-black tracking-wider italic uppercase text-green-400">Monster Lab</h1>
         <p className="text-zinc-400 text-sm mt-1">Cria a tua edição limitada</p>
       </div>
 
